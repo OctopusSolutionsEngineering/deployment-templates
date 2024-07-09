@@ -1,0 +1,68 @@
+step "deploy-kubernetes-yaml" {
+    name = "Deploy Kubernetes YAML"
+    properties = {
+        Octopus.Action.TargetRoles = "k8s"
+    }
+
+    action {
+        action_type = "Octopus.KubernetesDeployRawYaml"
+        properties = {
+            Octopus.Action.Kubernetes.DeploymentTimeout = "180"
+            Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.Enabled = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.ForceConflicts = "True"
+            Octopus.Action.KubernetesContainers.CustomResourceYaml = <<-EOT
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: my-nginx-svc
+                  labels:
+                    app: nginx
+                spec:
+                  type: LoadBalancer
+                  ports:
+                  - port: 80
+                  selector:
+                    app: nginx
+                ---
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: my-nginx
+                  labels:
+                    app: nginx
+                spec:
+                  replicas: 3
+                  selector:
+                    matchLabels:
+                      app: nginx
+                  template:
+                    metadata:
+                      labels:
+                        app: nginx
+                    spec:
+                      containers:
+                      - name: nginx
+                        image: nginx:1.14.2
+                        ports:
+                        - containerPort: 80
+                EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+        }
+        worker_pool_variable = ""
+    }
+}
+
+step "test-connection" {
+    name = "Test connection"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = "Write-host \"connection tested\""
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
