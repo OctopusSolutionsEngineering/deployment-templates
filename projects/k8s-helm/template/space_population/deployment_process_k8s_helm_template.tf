@@ -23,10 +23,10 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       can_be_used_for_project_versioning = true
       is_required                        = false
       properties                         = {
-        "Octopus.Action.Helm.ResetValues" = "True"
-        "Octopus.Action.Package.DownloadOnTentacle" = "False"
         "Octopus.Action.RunOnServer" = "false"
         "Octopus.Action.Helm.ClientVersion" = "V3"
+        "Octopus.Action.Helm.ResetValues" = "True"
+        "Octopus.Action.Package.DownloadOnTentacle" = "False"
       }
       environments                       = []
       excluded_environments              = []
@@ -55,7 +55,7 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
     action {
       action_type                        = "Octopus.Script"
       name                               = "Test connection"
-      notes                              = "This step verifies the web server is available."
+      notes                              = "This is an update."
       condition                          = "Success"
       run_on_server                      = true
       is_disabled                        = false
