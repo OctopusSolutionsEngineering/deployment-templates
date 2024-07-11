@@ -32,7 +32,7 @@ step "test-connection" {
 
     action {
         action_type = "Octopus.Script"
-        notes = "This step verifies the web server is available. Updated."
+        notes = "This step verifies the web server is available."
         properties = {
             Octopus.Action.Script.ScriptBody = "Write-host \"hello\""
             Octopus.Action.Script.ScriptSource = "Inline"
