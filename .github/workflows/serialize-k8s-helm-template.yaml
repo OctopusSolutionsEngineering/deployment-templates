@@ -1,9 +1,9 @@
 name: Serialize K8s Helm Template
 'on':
   workflow_dispatch: {}
-#  push:
-#    paths:
-#      - '.octopus/templates/k8s-helm-template/*'
+  push:
+    paths:
+      - '.octopus/templates/k8s-helm-template/*'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -57,7 +57,7 @@ jobs:
               
               pushd "$dir" || exit
               # Init the terraform backend, passing in the backend config values
-              terraform init -backend-config="bucket=octopus-primerica-tf-state" -backend-config="region=us-east-1" -backend-config="key=K8sHelm"
+              terraform init -backend-config="bucket=octopus-primerica-tf-state" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=K8sHelm"
               # Each project is managed in it's own workspace
               terraform workspace select -or-create "${project}"
               # Apply the terraform configuration, passing in the octopus details
