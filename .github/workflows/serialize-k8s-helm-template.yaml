@@ -10,6 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v3
+      # This step serialized the template project to a Terraform module. It essentially converts the CaC enabled project
+      # back to a regular project. The module is saved in projects/k8s-helm/template. This module is expected to be
+      # referenced by another module that defines the unique values for each child project.
+      # So the workflow here is:
+      # 1. Update the template project, which can be done via the UI and using Octopus to commit the changes to Git
+      # 2. This workflow is triggered, serializing the template project to a Terraform module
+      # 3. The child projects are then reapplied, picking up any new changes, and applying their own specific customizations
       - name: Serialize Project
         run: |
           mkdir -p projects/k8s-helm/template
@@ -25,12 +32,16 @@ jobs:
               -terraformBackend s3 \
               -dest /tmp/octoexport
         shell: bash
+      # The credentials here are required for the Terraform state, which is managed in an S3 bucket. If using another
+      # remote backend, this step is not necessary.
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+      # This is where we loop over all the subdirectories under /projects/k8s-helm, where each project is assumed
+      # to be the name of the child project. This script then calls Terraform to apply any new changes.
       - name: Create / Update projects
         run: |
           for dir in $(pwd)/projects/k8s-helm/*/     # list directories in the form "/tmp/dirname/"
