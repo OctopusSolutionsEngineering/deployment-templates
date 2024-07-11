@@ -19,6 +19,7 @@ provider "octopusdeploy" {
 module "template_project" {
   source = "../template/space_population"
   project_k8s_helm_template_name = var.project_name
+  k8s_helm_template_kubernetes_namespace_1 = "loansteam"
 }
 
 variable "octopus_server" {
