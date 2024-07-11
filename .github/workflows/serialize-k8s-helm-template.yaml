@@ -1,3 +1,6 @@
+permissions:
+  contents: write
+
 name: Serialize K8s Helm Template
 'on':
   workflow_dispatch: {}
@@ -8,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
       # This step serialized the template project to a Terraform module. It essentially converts the CaC enabled project
       # back to a regular project. The module is saved in projects/k8s-helm/template. This module is expected to be
@@ -32,6 +35,7 @@ jobs:
               -terraformBackend s3 \
               -dest /tmp/octoexport
         shell: bash
+      - uses: stefanzweifel/git-auto-commit-action@v5
       # The credentials here are required for the Terraform state, which is managed in an S3 bucket. If using another
       # remote backend, this step is not necessary.
       - name: Configure AWS Credentials
