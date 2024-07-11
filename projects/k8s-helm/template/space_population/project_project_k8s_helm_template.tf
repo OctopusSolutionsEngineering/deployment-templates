@@ -40,7 +40,7 @@ resource "octopusdeploy_project" "project_k8s_helm_template" {
   default_to_skip_if_already_installed = false
   discrete_channel_release             = false
   is_disabled                          = false
-  is_version_controlled                = true
+  is_version_controlled                = false
   lifecycle_id                         = "${data.octopusdeploy_lifecycles.lifecycle_default_lifecycle.lifecycles[0].id}"
   project_group_id                     = "${data.octopusdeploy_project_groups.project_group_project_templates.project_groups[0].id}"
   included_library_variable_sets       = []
