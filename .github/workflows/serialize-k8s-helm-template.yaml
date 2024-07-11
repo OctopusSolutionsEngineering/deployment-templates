@@ -34,13 +34,27 @@ jobs:
         run: |
           for dir in $(pwd)/projects/k8s-helm/*/     # list directories in the form "/tmp/dirname/"
           do
-            dir=${dir%*/}       # remove the trailing "/"
-            project=${dir##*/}  # print everything after the final "/"
-            pushd $dir
-              # Init the terraform backend, passing in the backend config values
-              terraform init -backend-config="bucket=octopus-primerica-tf-state" -backend-config="region=us-east-1" -backend-config="key=K8sHelm"
-              # Apply the terraform configuration, passing in the octopus details
-              terraform apply -auto-approve -var=octopus_server=https://demo.octopus.app -var=octopus_apikey=${{ secrets.OCTOPUS_APIKEY }} -var=octopus_space=Spaces-2165
-            popd
+            # Remove the trailing slash
+            dir=${dir%*/}
+            # The directory name becomes the project name
+            project=${dir##*/}
+          
+            # We don't process the template directory
+            if [[ $project != "template" ]]; then
+              echo "Processing project: $project"
+          
+              pushd "$dir"
+                # Each project is managed in it's own workspace
+                terraform workspace select -or-create "${project}"
+                # Init the terraform backend, passing in the backend config values
+                terraform init -backend-config="bucket=octopus-primerica-tf-state" -backend-config="region=us-east-1" -backend-config="key=K8sHelm"
+                # Apply the terraform configuration, passing in the octopus details
+                terraform apply -auto-approve \
+                  -var=octopus_server=https://demo.octopus.app \
+                  -var=octopus_apikey=${{ secrets.OCTOPUS_APIKEY }} \
+                  -var=octopus_space_id=Spaces-2165 \
+                  -var=project_name="${project}"
+              popd
+            fi
           done
         shell: bash
