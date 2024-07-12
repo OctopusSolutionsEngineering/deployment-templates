@@ -1,3 +1,15 @@
+step "manual-intervention-required-2" {
+    name = "Manual Intervention Required 2"
+
+    action {
+        action_type = "Octopus.Manual"
+        properties = {
+            Octopus.Action.Manual.BlockConcurrentDeployments = "False"
+            Octopus.Action.Manual.Instructions = "2"
+        }
+    }
+}
+
 step "manual-intervention-required" {
     name = "Manual Intervention Required"
 
@@ -6,6 +18,7 @@ step "manual-intervention-required" {
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = "Approve?"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
