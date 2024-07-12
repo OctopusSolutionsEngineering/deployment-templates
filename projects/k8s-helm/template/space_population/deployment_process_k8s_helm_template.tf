@@ -10,6 +10,36 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
 
   step {
     condition           = "Success"
+    name                = "Manual Intervention Required"
+    package_requirement = "LetOctopusDecide"
+    start_trigger       = "StartAfterPrevious"
+
+    action {
+      action_type                        = "Octopus.Manual"
+      name                               = "Manual Intervention Required"
+      condition                          = "Success"
+      run_on_server                      = false
+      is_disabled                        = false
+      can_be_used_for_project_versioning = false
+      is_required                        = false
+      worker_pool_id                     = ""
+      properties                         = {
+        "Octopus.Action.Manual.BlockConcurrentDeployments" = "False"
+        "Octopus.Action.Manual.Instructions" = "Proceed?"
+        "Octopus.Action.RunOnServer" = "false"
+      }
+      environments                       = []
+      excluded_environments              = []
+      channels                           = []
+      tenant_tags                        = []
+      features                           = []
+    }
+
+    properties   = {}
+    target_roles = []
+  }
+  step {
+    condition           = "Success"
     name                = "Deploy a Helm Chart"
     package_requirement = "LetOctopusDecide"
     start_trigger       = "StartAfterPrevious"
@@ -63,10 +93,10 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       is_required                        = false
       worker_pool_id                     = "${data.octopusdeploy_worker_pools.workerpool_hosted_windows.worker_pools[0].id}"
       properties                         = {
+        "Octopus.Action.Script.ScriptBody" = "Write-host \"hello\""
         "Octopus.Action.Script.ScriptSource" = "Inline"
         "Octopus.Action.Script.Syntax" = "PowerShell"
         "Octopus.Action.RunOnServer" = "true"
-        "Octopus.Action.Script.ScriptBody" = "Write-host \"hello\""
       }
       environments                       = []
       excluded_environments              = []
