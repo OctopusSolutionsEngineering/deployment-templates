@@ -70,8 +70,8 @@ jobs:
               
               if [[ "$PROJECT_ID" == "Projects-*" ]]
               then
-                DEPLOYMENT_PROCESS_ID=$(curl -X GET "https://demo.octopus.app/api/Spaces-2728/projects/$PROJECT_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r '.DeploymentProcessId')
-                curl -X DELETE "https://demo.octopus.app/api/deploymentprocesses/$DEPLOYMENT_PROCESS_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}"
+                DEPLOYMENT_PROCESS_ID=$(curl -X GET "https://demo.octopus.app/api/Spaces-2165/projects/$PROJECT_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r '.DeploymentProcessId')
+                curl -X DELETE "https://demo.octopus.app/api/Spaces-2165/deploymentprocesses/$DEPLOYMENT_PROCESS_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}"
                 echo "Cleared the deployment process $DEPLOYMENT_PROCESS_ID"
               fi
               
