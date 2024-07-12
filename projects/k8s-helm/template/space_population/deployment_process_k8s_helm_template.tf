@@ -24,9 +24,9 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       is_required                        = false
       worker_pool_id                     = ""
       properties                         = {
-        "Octopus.Action.Manual.BlockConcurrentDeployments" = "False"
         "Octopus.Action.Manual.Instructions" = "2"
         "Octopus.Action.RunOnServer" = "false"
+        "Octopus.Action.Manual.BlockConcurrentDeployments" = "False"
       }
       environments                       = []
       excluded_environments              = []
@@ -54,9 +54,9 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       is_required                        = false
       worker_pool_id                     = ""
       properties                         = {
-        "Octopus.Action.Manual.Instructions" = "Approve?"
         "Octopus.Action.RunOnServer" = "false"
         "Octopus.Action.Manual.BlockConcurrentDeployments" = "False"
+        "Octopus.Action.Manual.Instructions" = "Approve?"
       }
       environments                       = []
       excluded_environments              = []
@@ -83,10 +83,10 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       can_be_used_for_project_versioning = true
       is_required                        = false
       properties                         = {
-        "Octopus.Action.Package.DownloadOnTentacle" = "False"
-        "Octopus.Action.RunOnServer" = "false"
         "Octopus.Action.Helm.ClientVersion" = "V3"
         "Octopus.Action.Helm.ResetValues" = "True"
+        "Octopus.Action.Package.DownloadOnTentacle" = "False"
+        "Octopus.Action.RunOnServer" = "false"
       }
       environments                       = []
       excluded_environments              = []
