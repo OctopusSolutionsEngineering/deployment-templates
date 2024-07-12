@@ -69,7 +69,7 @@ jobs:
               PROJECT_ID=$(curl -X GET "https://demo.octopus.app/api/Spaces-2165/projects" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r ".Items[] | select(.Name==\"${project}\") | .Id")
               echo "Found project $PROJECT_ID"
               
-              if [[ $PROJECT_ID == "Projects-*" ]]
+              if [[ $PROJECT_ID == Projects-* ]]
               then
                 DEPLOYMENT_PROCESS_ID=$(curl -X GET "https://demo.octopus.app/api/Spaces-2165/projects/$PROJECT_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r '.DeploymentProcessId')
                 curl -X DELETE "https://demo.octopus.app/api/Spaces-2165/deploymentprocesses/$DEPLOYMENT_PROCESS_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}"
