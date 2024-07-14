@@ -1,3 +1,17 @@
+step "run-a-script" {
+    name = "Run a Script"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = "aaaa"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
 step "manual-intervention-required" {
     name = "Manual Intervention Required"
 
@@ -6,6 +20,7 @@ step "manual-intervention-required" {
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = "Proceed?"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
