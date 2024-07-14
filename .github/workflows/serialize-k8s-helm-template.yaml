@@ -110,8 +110,8 @@ jobs:
               # Each project is managed in it's own workspace
               terraform workspace select -or-create "${project}"
           
-              # Destory the terraform configuration, passing in the octopus details
-              terraform destory -auto-approve \
+              # Destroy the terraform configuration, passing in the octopus details
+              terraform destroy -auto-approve \
               -var=octopus_server=https://demo.octopus.app \
               -var=octopus_apikey=${{ secrets.OCTOPUS_APIKEY }} \
               -var=octopus_space_id=Spaces-2165
