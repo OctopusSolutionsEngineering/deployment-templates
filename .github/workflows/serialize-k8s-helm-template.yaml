@@ -7,6 +7,7 @@ name: Serialize K8s Helm Template
   push:
     paths:
       - '.octopus/templates/k8s-helm-template/*'
+      - 'projects/**/*'
 jobs:
   build:
     runs-on: ubuntu-latest
