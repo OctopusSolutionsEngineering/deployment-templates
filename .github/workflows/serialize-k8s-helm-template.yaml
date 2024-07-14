@@ -48,7 +48,7 @@ jobs:
       # to be the name of the child project. This script then calls Terraform to apply any new changes.
       - name: Create / Update projects
         run: |
-          for dir in $(pwd)/projects/k8s-helm/*/     # list directories in the form "/tmp/dirname/"
+          for dir in $(pwd)/projects/k8s-helm/projects/*/     # list directories in the form "/tmp/dirname/"
           do
             # Remove the trailing slash
             dir=${dir%*/}
@@ -85,6 +85,36 @@ jobs:
               -var=octopus_apikey=${{ secrets.OCTOPUS_APIKEY }} \
               -var=octopus_space_id=Spaces-2165 \
               -var=project_name="${project}"
+              popd || exit
+            fi
+          done
+        shell: bash
+      # This is where we loop over all the subdirectories under /projects/k8s-helm, where each project is assumed
+      # to be the name of the child project. This script then calls Terraform to apply any new changes.
+      - name: Destory projects
+        run: |
+          for dir in $(pwd)/projects/k8s-helm/cleanup/*/     # list directories in the form "/tmp/dirname/"
+          do
+            # Remove the trailing slash
+            dir=${dir%*/}
+            # The directory name becomes the project name
+            project=${dir##*/}
+          
+            # We don't process the template directory
+            if [[ $project != "template" ]]; then
+              echo "Processing project: $project"
+          
+              pushd "$dir" || exit
+              # Init the terraform backend, passing in the backend config values
+              terraform init -backend-config="bucket=octopus-primerica-tf-state" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=K8sHelm"
+              # Each project is managed in it's own workspace
+              terraform workspace select -or-create "${project}"
+          
+              # Destory the terraform configuration, passing in the octopus details
+              terraform destory -auto-approve \
+              -var=octopus_server=https://demo.octopus.app \
+              -var=octopus_apikey=${{ secrets.OCTOPUS_APIKEY }} \
+              -var=octopus_space_id=Spaces-2165
               popd || exit
             fi
           done
