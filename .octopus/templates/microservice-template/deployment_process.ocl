@@ -92,6 +92,7 @@ step "run-a-kubectl-script" {
     action {
         action_type = "Octopus.KubernetesRunScript"
         properties = {
+            Octopus.Action.KubernetesContainers.Namespace = "#{Octopus.Environment.Name | ToLower}-#{K8s.Namespace.Name}"
             Octopus.Action.RunOnServer = "true"
             Octopus.Action.Script.ScriptBody = "kubectl get ingress"
             Octopus.Action.Script.ScriptSource = "Inline"
