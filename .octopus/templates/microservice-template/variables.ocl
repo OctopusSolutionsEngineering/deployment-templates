@@ -22,7 +22,7 @@ variable "Application.Theme.Color" {
     value "green" {}
 }
 
-variable "Project Name" {
+variable "ProjectName" {
     value "Test" {
         process = ["runbook/2-create-project"]
 
