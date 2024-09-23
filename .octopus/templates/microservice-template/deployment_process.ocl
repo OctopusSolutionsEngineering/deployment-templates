@@ -69,6 +69,7 @@ step "deploy-kubernetes-yaml" {
                                 number: 80
                 
                 EOT
+            Octopus.Action.KubernetesContainers.Namespace = "#{K8s.Namespace.Name}"
             Octopus.Action.RunOnServer = "false"
             Octopus.Action.Script.ScriptSource = "Inline"
         }
