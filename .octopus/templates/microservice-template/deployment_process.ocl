@@ -76,3 +76,27 @@ step "deploy-kubernetes-yaml" {
         worker_pool_variable = ""
     }
 }
+
+step "run-a-kubectl-script" {
+    name = "Run a kubectl script"
+    properties = {
+        Octopus.Action.TargetRoles = "eks-admin"
+    }
+
+    action {
+        action_type = "Octopus.KubernetesRunScript"
+        properties = {
+            Octopus.Action.RunOnServer = "true"
+            Octopus.Action.Script.ScriptBody = "kubectl get ingress"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "Bash"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool_variable = ""
+
+        container {
+            feed = "github-container-registry"
+            image = "ghcr.io/octopusdeploylabs/k8s-workertools"
+        }
+    }
+}
