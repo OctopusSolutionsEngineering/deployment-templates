@@ -23,7 +23,7 @@ variable "Application.Theme.Color" {
 }
 
 variable "Project Name" {
-    value {
+    value "Test" {
         process = ["runbook/2-create-project"]
 
         prompt {
