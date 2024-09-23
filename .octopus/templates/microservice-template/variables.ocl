@@ -17,3 +17,7 @@ variable "K8s.Deployment.Name" {
 variable "K8s.Ingress.Path" {
     value "/template" {}
 }
+
+variable "Application.Theme.Color" {
+    value "green" {}
+}
