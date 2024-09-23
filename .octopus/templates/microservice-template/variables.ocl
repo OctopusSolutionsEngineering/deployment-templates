@@ -21,3 +21,9 @@ variable "K8s.Ingress.Path" {
 variable "Application.Theme.Color" {
     value "green" {}
 }
+
+variable "Private.AWS.Account" {
+    type = "AmazonWebServicesAccount"
+
+    value "github-universe-2024" {}
+}
