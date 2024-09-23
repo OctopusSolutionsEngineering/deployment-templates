@@ -22,12 +22,6 @@ variable "Application.Theme.Color" {
     value "green" {}
 }
 
-variable "Private.AWS.Account" {
-    type = "AmazonWebServicesAccount"
-
-    value "github-universe-2024" {}
-}
-
 variable "EnterprisePatterns.Project.Name" {
     value {
         process = ["runbook/2-create-project"]
