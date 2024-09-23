@@ -1,7 +1,7 @@
 step "deploy-kubernetes-yaml" {
     name = "Deploy Kubernetes YAML"
     properties = {
-        Octopus.Action.TargetRoles = "eks-admin"
+        Octopus.Action.TargetRoles = "Kubernetes"
     }
 
     action {
@@ -86,7 +86,7 @@ step "deploy-kubernetes-yaml" {
 step "run-a-kubectl-script" {
     name = "Run a kubectl script"
     properties = {
-        Octopus.Action.TargetRoles = "eks-admin"
+        Octopus.Action.TargetRoles = "Kubernetes"
     }
 
     action {
