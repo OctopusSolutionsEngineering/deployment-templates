@@ -18,3 +18,48 @@ step "hello-world-using-bash" {
         }
     }
 }
+
+step "deploy-kubernetes-yaml" {
+    name = "Deploy Kubernetes YAML"
+    properties = {
+        Octopus.Action.TargetRoles = "eks-admin"
+    }
+
+    action {
+        action_type = "Octopus.KubernetesDeployRawYaml"
+        properties = {
+            Octopus.Action.Kubernetes.DeploymentTimeout = "180"
+            Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.Enabled = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.ForceConflicts = "True"
+            Octopus.Action.KubernetesContainers.CustomResourceYaml = <<-EOT
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: oghu2024sampleapp
+                  labels:
+                    app: web
+                spec:
+                  selector:
+                    matchLabels:
+                      app: web
+                  replicas: 1
+                  strategy:
+                    type: RollingUpdate
+                  template:
+                    metadata:
+                      labels:
+                        app: web
+                    spec:
+                      containers:
+                        - name: ghu2024sampleapp
+                          image: ghcr.io/octopussolutionsengineering/ghu2024sampleapp
+                          ports:
+                            - containerPort: 8080
+                      
+                EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+        }
+        worker_pool_variable = ""
+    }
+}
