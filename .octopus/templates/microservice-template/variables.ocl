@@ -1,0 +1,19 @@
+variable "K8s.Namespace.Name" {
+    value "template" {}
+}
+
+variable "Application.Title" {
+    value "My Web App" {}
+}
+
+variable "K8s.Service.Port" {
+    value "8080" {}
+}
+
+variable "K8s.Deployment.Name" {
+    value "template" {}
+}
+
+variable "K8s.Ingress.Path" {
+    value "/template" {}
+}
