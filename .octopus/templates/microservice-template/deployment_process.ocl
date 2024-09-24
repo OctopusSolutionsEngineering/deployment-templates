@@ -110,6 +110,7 @@ step "run-a-kubectl-script" {
                 ADDRESS=$(kubectl get ingress ghu2024sampleapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
                 
                 write_highlight "URL: [http://${ADDRESS}](http://${ADDRESS})"
+                write_highlight "Note it can take a minute or so for new DNS records to propogate."
                 EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "Bash"
