@@ -8,7 +8,7 @@ step "support-instructions" {
                 write_highlight "Use the following prompts to support your deployments:"
                 write_highlight "- Run runbook \"Verify App Status\" in the \"#{Octopus.Project.Name}\" project in the \"#{Octopus.Environment.Name}\" environment in the \"#{Octopus.Space.Name}\" space"
                 write_highlight "- Show me the runbook dashboard for \"Verify App Status\" in the project \"#{Octopus.Project.Name}\" in the \"#{Octopus.Space.Name}\" space"
-                write_highlight "- Summarize the execution logs of the runbook  \"Verify App Status\" in the project \"#{Octopus.Project.Name}\" in the \"#{Octopus.Space.Name}\" space"
+                write_highlight "- Summarize the execution logs of the runbook  \"Verify App Status\" in the project \"#{Octopus.Project.Name}\" in the \"#{Octopus.Environment.Name}\" environment in the \"#{Octopus.Space.Name}\" space"
                 
                 
                 EOT
