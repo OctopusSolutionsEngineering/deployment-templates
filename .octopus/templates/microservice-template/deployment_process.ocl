@@ -102,6 +102,8 @@ step "run-a-kubectl-script" {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 kubectl get ingress
                 
+                kubectl get ingress ghu2024sampleapp -o yaml
+                
                 ADDRESS=$(kubectl get ingress ghu2024sampleapp -o jsonpath='{.status.loadBalancer.ingress[0].address}')
                 
                 write_highlight "URL: [http://${ADDRESS}](http://${ADDRESS})"
