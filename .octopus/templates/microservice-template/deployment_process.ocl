@@ -104,7 +104,7 @@ step "run-a-kubectl-script" {
                 
                 kubectl get ingress ghu2024sampleapp -o yaml
                 
-                ADDRESS=$(kubectl get ingress ghu2024sampleapp -o jsonpath='{.status.loadBalancer.ingress[0].address}')
+                ADDRESS=$(kubectl get ingress ghu2024sampleapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
                 
                 write_highlight "URL: [http://${ADDRESS}](http://${ADDRESS})"
                 EOT
