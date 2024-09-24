@@ -41,6 +41,8 @@ step "deploy-kubernetes-yaml" {
                 kind: Service
                 metadata:
                   name: ghu2024sampleapp
+                  labels:
+                    app: web
                 spec:
                   selector:
                     app: web
@@ -53,6 +55,8 @@ step "deploy-kubernetes-yaml" {
                 kind: Ingress
                 metadata:
                   name: ghu2024sampleapp
+                  labels:
+                    app: web
                   annotations:
                     alb.ingress.kubernetes.io/scheme: internet-facing
                     alb.ingress.kubernetes.io/target-type: ip
