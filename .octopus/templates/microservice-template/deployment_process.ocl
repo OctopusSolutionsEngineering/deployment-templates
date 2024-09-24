@@ -33,6 +33,7 @@ step "deploy-kubernetes-yaml" {
                       containers:
                         - name: ghu2024sampleapp
                           image: ghcr.io/octopussolutionsengineering/ghu2024sampleapp
+                          imagePullPolicy: "Always"
                           ports:
                             - containerPort: 8080
                 ---
