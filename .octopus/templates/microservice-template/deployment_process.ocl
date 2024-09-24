@@ -1,3 +1,24 @@
+step "support-instructions" {
+    name = "Support Instructions"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                write_highlight "Use the following prompts to support your deployments:"
+                write_highlight "* Run runbook \"Verify App Status\" in the \"#{Octopus.Project.Name}\" project in the \"#{Octopus.Environment.Name}\" environment in the \"#{Octopus.Space.Name}\" space"
+                write_highlight "* Show me the runbook dashboard for \"Verify App Status\" in the project \"#{Octopus.Project.Name}\" in the \"#{Octopus.Space.Name}\" space"
+                write_highlight "* Summarize the execution logs of the runbook  \"Verify App Status\" in the project \"#{Octopus.Project.Name}\" in the \"#{Octopus.Space.Name}\" space"
+                
+                
+                EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "Bash"
+        }
+        worker_pool = "hosted-ubuntu"
+    }
+}
+
 step "deploy-kubernetes-yaml" {
     name = "Deploy Kubernetes YAML"
     properties = {
@@ -124,23 +145,5 @@ step "run-a-kubectl-script" {
             feed = "github-container-registry"
             image = "ghcr.io/octopusdeploylabs/k8s-workertools"
         }
-    }
-}
-
-step "support-instructions" {
-    name = "Support Instructions"
-
-    action {
-        action_type = "Octopus.Script"
-        properties = {
-            Octopus.Action.Script.ScriptBody = <<-EOT
-                write_highlight "Use the following prompts to support your deployments:"
-                write_highlight "Run runbook \"Verify App Status\" in the \"#{Octopus.Project.Name}\" project in the \"#{Octopus.Environment.Name}\" environment in the \"#{Octopus.Space.Name}\" space"
-                write_highlight "Show me the runbook dashboard for \"Verify App Status\" in the project \"#{Octopus.Project.Name}\" in the \"#{Octopus.Space.Name}\" space"
-                EOT
-            Octopus.Action.Script.ScriptSource = "Inline"
-            Octopus.Action.Script.Syntax = "Bash"
-        }
-        worker_pool = "hosted-ubuntu"
     }
 }
