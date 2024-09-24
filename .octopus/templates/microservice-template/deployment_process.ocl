@@ -117,7 +117,7 @@ step "deploy-kubernetes-yaml" {
 }
 
 step "run-a-kubectl-script" {
-    name = "Run a kubectl script"
+    name = "Display URL"
     properties = {
         Octopus.Action.TargetRoles = "Kubernetes"
     }
