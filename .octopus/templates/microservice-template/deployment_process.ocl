@@ -15,7 +15,7 @@ step "deploy-kubernetes-yaml" {
                 apiVersion: apps/v1
                 kind: Deployment
                 metadata:
-                  name: oghu2024sampleapp
+                  name: ghu2024sampleapp
                   labels:
                     app: web
                 spec:
@@ -99,7 +99,13 @@ step "run-a-kubectl-script" {
         properties = {
             Octopus.Action.KubernetesContainers.Namespace = "#{Octopus.Environment.Name | ToLower}-#{K8s.Namespace.Name}"
             Octopus.Action.RunOnServer = "true"
-            Octopus.Action.Script.ScriptBody = "kubectl get ingress"
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                kubectl get ingress
+                
+                ADDRESS=$(kubectl get ingress ghu2024sampleapp -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+                
+                write_highlight "URL: [http://${ADDRESS}](http://${ADDRESS})"
+                EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "Bash"
             OctopusUseBundledTooling = "False"
