@@ -39,6 +39,8 @@ step "deploy-kubernetes-yaml" {
                             value: "#{Octopus.Environment.Name}"
                           - name: VERSION
                             value: "#{Octopus.Release.Number}"
+                          - name: TITLE
+                            value: "#{Octopus.Project.Name}"
                           ports:
                             - containerPort: 8080
                 ---
