@@ -25,3 +25,7 @@ variable "Application.Theme.Color" {
 variable "OctopusBypassDeploymentMutex" {
     value "True" {}
 }
+
+variable "Octopus.Task.ConcurrencyTag" {
+    value "#{if Octopus.RunbookRun.Id}#{Octopus.RunbookRun.Id}#{/if}#{unless Octopus.RunbookRun.Id}#{Octopus.Project.Id}/#{Octopus.Environment.Id}#{/unless}" {}
+}
