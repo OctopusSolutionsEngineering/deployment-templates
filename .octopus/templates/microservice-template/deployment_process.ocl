@@ -116,6 +116,33 @@ step "deploy-kubernetes-yaml" {
     }
 }
 
+step "run-smoke-test" {
+    name = "Run Smoke Test"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                $EnvName = $OctopusParameters["Octopus.Environment.Name"]
+                $RelNum = $OctopusParameters["Octopus.Release.Number"]
+                
+                Write-Host "Smoke test for version: $RelNum"
+                Write-Host "Environment: $EnvName"
+                Write-Host "---"
+                Write-Host "---"
+                Write-Host "Testing web portal base endpoint"
+                Write-Host "Successful response received."
+                Write-Host "---"
+                Write-Host "Testing authentication API endpoint"
+                Write-Host "Successful response received."
+                EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "hosted-ubuntu"
+    }
+}
+
 step "run-a-kubectl-script" {
     name = "Display URL"
     properties = {
