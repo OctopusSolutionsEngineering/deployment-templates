@@ -14,8 +14,14 @@ step "support-instructions" {
                 EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "Bash"
+            OctopusUseBundledTooling = "False"
         }
-        worker_pool = "hosted-ubuntu"
+        worker_pool = "aws-worker-pool"
+
+        container {
+            feed = "github-container-registry"
+            image = "ghcr.io/octopusdeploylabs/workertools"
+        }
     }
 }
 
@@ -103,11 +109,10 @@ step "deploy-kubernetes-yaml" {
                 
                 EOT
             Octopus.Action.KubernetesContainers.Namespace = "#{Octopus.Environment.Name | ToLower}-#{K8s.Namespace.Name}"
-            Octopus.Action.RunOnServer = "true"
             Octopus.Action.Script.ScriptSource = "Inline"
             OctopusUseBundledTooling = "False"
         }
-        worker_pool_variable = ""
+        worker_pool = "aws-worker-pool"
 
         container {
             feed = "github-container-registry"
@@ -139,7 +144,7 @@ step "run-smoke-test" {
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
         }
-        worker_pool = "hosted-ubuntu"
+        worker_pool = "aws-worker-pool"
     }
 }
 
@@ -153,7 +158,6 @@ step "run-a-kubectl-script" {
         action_type = "Octopus.KubernetesRunScript"
         properties = {
             Octopus.Action.KubernetesContainers.Namespace = "#{Octopus.Environment.Name | ToLower}-#{K8s.Namespace.Name}"
-            Octopus.Action.RunOnServer = "true"
             Octopus.Action.Script.ScriptBody = <<-EOT
                 kubectl get ingress
                 
@@ -166,7 +170,7 @@ step "run-a-kubectl-script" {
             Octopus.Action.Script.Syntax = "Bash"
             OctopusUseBundledTooling = "False"
         }
-        worker_pool_variable = ""
+        worker_pool = "aws-worker-pool"
 
         container {
             feed = "github-container-registry"
