@@ -16,7 +16,7 @@ step "support-instructions" {
             Octopus.Action.Script.Syntax = "Bash"
             OctopusUseBundledTooling = "False"
         }
-        worker_pool = "aws-worker-pool"
+        worker_pool_variable = "Octopus.WorkerPool"
 
         container {
             feed = "github-container-registry"
@@ -112,7 +112,7 @@ step "deploy-kubernetes-yaml" {
             Octopus.Action.Script.ScriptSource = "Inline"
             OctopusUseBundledTooling = "False"
         }
-        worker_pool = "aws-worker-pool"
+        worker_pool_variable = "Octopus.WorkerPool"
 
         container {
             feed = "github-container-registry"
@@ -144,7 +144,7 @@ step "run-smoke-test" {
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
         }
-        worker_pool = "aws-worker-pool"
+        worker_pool_variable = "Octopus.WorkerPool"
     }
 }
 
@@ -170,7 +170,7 @@ step "run-a-kubectl-script" {
             Octopus.Action.Script.Syntax = "Bash"
             OctopusUseBundledTooling = "False"
         }
-        worker_pool = "aws-worker-pool"
+        worker_pool_variable = "Octopus.WorkerPool"
 
         container {
             feed = "github-container-registry"
