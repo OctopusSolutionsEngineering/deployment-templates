@@ -62,7 +62,7 @@ step "run-a-script" {
     action {
         action_type = "Octopus.Script"
         properties = {
-            Octopus.Action.Script.ScriptBody = "echo \"hi\""
+            Octopus.Action.Script.ScriptBody = "echo \"this is a test\""
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
