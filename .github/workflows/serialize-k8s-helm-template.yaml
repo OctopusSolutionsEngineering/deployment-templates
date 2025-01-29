@@ -9,6 +9,8 @@ name: Serialize K8s Helm Template
       - '.octopus/templates/k8s-helm-template/*'
       - 'projects/**/*'
 jobs:
+  env:
+    PROJECT_DIR: k8s-helm
   build:
     runs-on: ubuntu-latest
     steps:
@@ -29,9 +31,9 @@ jobs:
       # -projectName: The name of the project to serialize
       - name: Serialize Project
         run: |
-          rm -rf projects/k8s-helm/template
-          mkdir -p projects/k8s-helm/template
-          docker run -v $(pwd)/projects/k8s-helm/template:/tmp/octoexport --rm ghcr.io/octopussolutionsengineering/octoterra \
+          rm -rf projects/${{ env.PROJECT_DIR }}//template
+          mkdir -p projects/${{ env.PROJECT_DIR }}/template
+          docker run -v $(pwd)/projects/${{ env.PROJECT_DIR }}//template:/tmp/octoexport --rm ghcr.io/octopussolutionsengineering/octoterra \
               -url ${{ secrets.OCTOPUS_URL }} \
               -space ${{ secrets.OCTOPUS_SPACEID }} \
               -apiKey ${{ secrets.OCTOPUS_APIKEY }} \
@@ -57,7 +59,7 @@ jobs:
       # to be the name of the child project. This script then calls Terraform to apply any new changes.
       - name: Create / Update projects
         run: |
-          for dir in $(pwd)/projects/k8s-helm/projects/*/     # list directories in the form "/tmp/dirname/"
+          for dir in $(pwd)/projects/${{ env.PROJECT_DIR }}//projects/*/     # list directories in the form "/tmp/dirname/"
           do
             # Remove the trailing slash
             dir=${dir%*/}
@@ -102,7 +104,7 @@ jobs:
       # to be the name of the child project. This script then calls Terraform to destroy any projects that need to be removed.
       - name: Destroy projects
         run: |
-          for dir in $(pwd)/projects/k8s-helm/cleanup/*/     # list directories in the form "/tmp/dirname/"
+          for dir in $(pwd)/projects/${{ env.PROJECT_DIR }}//cleanup/*/     # list directories in the form "/tmp/dirname/"
           do
             # Remove the trailing slash
             dir=${dir%*/}
