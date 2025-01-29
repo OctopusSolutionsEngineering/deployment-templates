@@ -3,7 +3,7 @@ step "manual-intervention-required" {
 
     action {
         action_type = "Octopus.Manual"
-        notes = "Changed this note"
+        notes = "This is updated"
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = "Proceed?"
@@ -51,6 +51,21 @@ step "test-connection" {
             Octopus.Action.Script.ScriptBody = "Write-host \"hello\""
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        worker_pool = "hosted-windows"
+    }
+}
+
+step "run-a-script" {
+    name = "Run a Script"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = "echo \"this is a test\""
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+            OctopusUseBundledTooling = "False"
         }
         worker_pool = "hosted-windows"
     }

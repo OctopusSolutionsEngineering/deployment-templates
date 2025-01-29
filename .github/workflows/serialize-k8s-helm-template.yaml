@@ -10,6 +10,11 @@ name: Serialize K8s Helm Template
       - 'projects/**/*'
 jobs:
   build:
+    env:
+      PROJECT_DIR: k8s-helm
+      S3_KEY: K8SHelm
+      PROJECT_NAME: K8s Helm Template
+      PROVIDER_VERSION: 0.40.0
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,17 +34,18 @@ jobs:
       # -projectName: The name of the project to serialize
       - name: Serialize Project
         run: |
-          rm -rf projects/k8s-helm/template
-          mkdir -p projects/k8s-helm/template
-          docker run -v $(pwd)/projects/k8s-helm/template:/tmp/octoexport --rm ghcr.io/octopussolutionsengineering/octoterra \
-              -url https://demo.octopus.app \
-              -space Spaces-2165 \
+          rm -rf projects/${{ env.PROJECT_DIR }}/template
+          mkdir -p projects/${{ env.PROJECT_DIR }}/template
+          docker run -v $(pwd)/projects/${{ env.PROJECT_DIR }}/template:/tmp/octoexport --rm ghcr.io/octopussolutionsengineering/octoterra \
+              -url ${{ secrets.OCTOPUS_URL }} \
+              -space ${{ secrets.OCTOPUS_SPACEID }} \
               -apiKey ${{ secrets.OCTOPUS_APIKEY }} \
-              -projectName "K8s Helm Template" \
+              -projectName "${{ env.PROJECT_NAME }}" \
               -lookupProjectDependencies \
               -ignoreCacManagedValues=false \
               -excludeCaCProjectSettings=true \
               -excludeProvider \
+              -providerVersion "${{ env.PROVIDER_VERSION }}" \
               -terraformBackend s3 \
               -dest /tmp/octoexport
         shell: bash
@@ -56,7 +62,7 @@ jobs:
       # to be the name of the child project. This script then calls Terraform to apply any new changes.
       - name: Create / Update projects
         run: |
-          for dir in $(pwd)/projects/k8s-helm/projects/*/     # list directories in the form "/tmp/dirname/"
+          for dir in $(pwd)/projects/${{ env.PROJECT_DIR }}/projects/*/     # list directories in the form "/tmp/dirname/"
           do
             # Remove the trailing slash
             dir=${dir%*/}
@@ -69,29 +75,29 @@ jobs:
             pushd "$dir" || exit
                         
             # Init the terraform backend, passing in the backend config values
-            terraform init -backend-config="bucket=octopus-primerica-tf-state" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=K8sHelm"
+            terraform init -backend-config="bucket=${{ secrets.AWS_BUCKET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=${{ env.S3_KEY }}"
             # Each project is managed in it's own workspace
             terraform workspace select -or-create "${project}"
             
             # Remove the deployment process, just in case
-            PROJECT_ID=$(curl -X GET "https://demo.octopus.app/api/Spaces-2165/projects" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r ".Items[] | select(.Name==\"${project}\") | .Id")
+            PROJECT_ID=$(curl -X GET "${{ secrets.OCTOPUS_URL }}/api/${{ secrets.OCTOPUS_SPACEID }}/projects" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r ".Items[] | select(.Name==\"${project}\") | .Id")
             echo "Found project $PROJECT_ID"
             
             if [[ $PROJECT_ID == Projects-* ]]
             then
-              DEPLOYMENT_PROCESS_ID=$(curl -X GET "https://demo.octopus.app/api/Spaces-2165/projects/$PROJECT_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r '.DeploymentProcessId')
+              DEPLOYMENT_PROCESS_ID=$(curl -X GET "${{ secrets.OCTOPUS_URL }}/api/${{ secrets.OCTOPUS_SPACEID }}/projects/$PROJECT_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r '.DeploymentProcessId')
               echo "Deployment process ID: $DEPLOYMENT_PROCESS_ID"
-              VERSION=$(curl -X GET "https://demo.octopus.app/api/Spaces-2165/deploymentprocesses/$DEPLOYMENT_PROCESS_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r ".Version")
+              VERSION=$(curl -X GET "${{ secrets.OCTOPUS_URL }}/api/${{ secrets.OCTOPUS_SPACEID }}/deploymentprocesses/$DEPLOYMENT_PROCESS_ID" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" | jq -r ".Version")
               echo "Deployment process version: $VERSION"
-              curl -X PUT "https://demo.octopus.app/api/Spaces-2165/projects/$PROJECT_ID/deploymentprocesses" -H "Content-Type: application/json" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" -d "{\"Version\": ${VERSION},\"Steps\": []}"
+              curl -X PUT "${{ secrets.OCTOPUS_URL }}/api/${{ secrets.OCTOPUS_SPACEID }}/projects/$PROJECT_ID/deploymentprocesses" -H "Content-Type: application/json" -H "X-Octopus-ApiKey: ${{ secrets.OCTOPUS_APIKEY }}" -d "{\"Version\": ${VERSION},\"Steps\": []}"
               echo "Cleared the deployment process $DEPLOYMENT_PROCESS_ID"
             fi
             
             # Apply the terraform configuration, passing in the octopus details
             terraform apply -auto-approve \
-            -var=octopus_server=https://demo.octopus.app \
+            -var=octopus_server=${{ secrets.OCTOPUS_URL }} \
             -var=octopus_apikey=${{ secrets.OCTOPUS_APIKEY }} \
-            -var=octopus_space_id=Spaces-2165 \
+            -var=octopus_space_id=${{ secrets.OCTOPUS_SPACEID }} \
             -var=project_name="${project}"
             popd || exit
 
@@ -101,7 +107,7 @@ jobs:
       # to be the name of the child project. This script then calls Terraform to destroy any projects that need to be removed.
       - name: Destroy projects
         run: |
-          for dir in $(pwd)/projects/k8s-helm/cleanup/*/     # list directories in the form "/tmp/dirname/"
+          for dir in $(pwd)/projects/${{ env.PROJECT_DIR }}/cleanup/*/     # list directories in the form "/tmp/dirname/"
           do
             # Remove the trailing slash
             dir=${dir%*/}
@@ -112,15 +118,15 @@ jobs:
         
             pushd "$dir" || exit
             # Init the terraform backend, passing in the backend config values
-            terraform init -backend-config="bucket=octopus-primerica-tf-state" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=K8sHelm"
+            terraform init -backend-config="bucket=${{ secrets.AWS_BUCKET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=${{ env.S3_KEY }}"
             # Each project is managed in it's own workspace
             terraform workspace select -or-create "${project}"
         
             # Destroy the terraform configuration, passing in the octopus details
             terraform destroy -auto-approve \
-            -var=octopus_server=https://demo.octopus.app \
+            -var=octopus_server=${{ secrets.OCTOPUS_URL }} \
             -var=octopus_apikey=${{ secrets.OCTOPUS_APIKEY }} \
-            -var=octopus_space_id=Spaces-2165
+            -var=octopus_space_id=${{ secrets.OCTOPUS_SPACEID }}
             popd || exit
 
           done

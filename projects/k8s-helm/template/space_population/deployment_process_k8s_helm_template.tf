@@ -17,7 +17,7 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
     action {
       action_type                        = "Octopus.Manual"
       name                               = "Manual Intervention Required"
-      notes                              = "Changed this note"
+      notes                              = "This is updated"
       condition                          = "Success"
       run_on_server                      = false
       is_disabled                        = false
@@ -25,9 +25,9 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       is_required                        = false
       worker_pool_id                     = ""
       properties                         = {
+        "Octopus.Action.Manual.BlockConcurrentDeployments" = "False"
         "Octopus.Action.Manual.Instructions" = "Proceed?"
         "Octopus.Action.RunOnServer" = "false"
-        "Octopus.Action.Manual.BlockConcurrentDeployments" = "False"
       }
       environments                       = []
       excluded_environments              = []
@@ -54,10 +54,10 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       can_be_used_for_project_versioning = true
       is_required                        = false
       properties                         = {
+        "Octopus.Action.RunOnServer" = "false"
         "Octopus.Action.Helm.ClientVersion" = "V3"
         "Octopus.Action.Helm.ResetValues" = "True"
         "Octopus.Action.Package.DownloadOnTentacle" = "False"
-        "Octopus.Action.RunOnServer" = "false"
       }
       environments                       = []
       excluded_environments              = []
@@ -94,10 +94,42 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       is_required                        = false
       worker_pool_id                     = "${data.octopusdeploy_worker_pools.workerpool_hosted_windows.worker_pools[0].id}"
       properties                         = {
-        "Octopus.Action.Script.Syntax" = "PowerShell"
-        "Octopus.Action.RunOnServer" = "true"
         "Octopus.Action.Script.ScriptBody" = "Write-host \"hello\""
         "Octopus.Action.Script.ScriptSource" = "Inline"
+        "Octopus.Action.Script.Syntax" = "PowerShell"
+        "Octopus.Action.RunOnServer" = "true"
+      }
+      environments                       = []
+      excluded_environments              = []
+      channels                           = []
+      tenant_tags                        = []
+      features                           = []
+    }
+
+    properties   = {}
+    target_roles = []
+  }
+  step {
+    condition           = "Success"
+    name                = "Run a Script"
+    package_requirement = "LetOctopusDecide"
+    start_trigger       = "StartAfterPrevious"
+
+    action {
+      action_type                        = "Octopus.Script"
+      name                               = "Run a Script"
+      condition                          = "Success"
+      run_on_server                      = true
+      is_disabled                        = false
+      can_be_used_for_project_versioning = false
+      is_required                        = false
+      worker_pool_id                     = "${data.octopusdeploy_worker_pools.workerpool_hosted_windows.worker_pools[0].id}"
+      properties                         = {
+        "Octopus.Action.Script.ScriptSource" = "Inline"
+        "Octopus.Action.Script.Syntax" = "PowerShell"
+        "OctopusUseBundledTooling" = "False"
+        "Octopus.Action.RunOnServer" = "true"
+        "Octopus.Action.Script.ScriptBody" = "echo \"this is a test\""
       }
       environments                       = []
       excluded_environments              = []

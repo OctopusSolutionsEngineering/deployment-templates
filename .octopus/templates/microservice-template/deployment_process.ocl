@@ -11,7 +11,7 @@ step "support-instructions" {
                 write_highlight "- Summarize the execution logs of the runbook  \"Verify App Status\" in the project \"#{Octopus.Project.Name}\" in the \"#{Octopus.Environment.Name}\" environment in the \"#{Octopus.Space.Name}\" space"
                 
                 
-                EOT
+                    EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "Bash"
             OctopusUseBundledTooling = "False"
@@ -107,7 +107,7 @@ step "deploy-kubernetes-yaml" {
                               port:
                                 number: 80
                 
-                EOT
+                    EOT
             Octopus.Action.KubernetesContainers.Namespace = "#{Octopus.Environment.Name | ToLower}-#{K8s.Namespace.Name}"
             Octopus.Action.Script.ScriptSource = "Inline"
             OctopusUseBundledTooling = "False"
@@ -140,7 +140,7 @@ step "run-smoke-test" {
                 Write-Host "---"
                 Write-Host "Testing authentication API endpoint"
                 Write-Host "Successful response received."
-                EOT
+                    EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
         }
@@ -165,7 +165,7 @@ step "run-a-kubectl-script" {
                 
                 write_highlight "URL: [http://${ADDRESS}](http://${ADDRESS})"
                 write_highlight "Note it can take a minute or so for new DNS records to propogate."
-                EOT
+                    EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "Bash"
             OctopusUseBundledTooling = "False"
