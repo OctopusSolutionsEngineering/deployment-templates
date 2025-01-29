@@ -40,6 +40,7 @@ jobs:
               -ignoreCacManagedValues=false \
               -excludeCaCProjectSettings=true \
               -excludeProvider \
+              -providerVersion "0.40.0" \
               -terraformBackend s3 \
               -dest /tmp/octoexport
         shell: bash
