@@ -42,14 +42,18 @@ resource "octopusdeploy_project" "project_k8s_helm_template" {
   is_disabled                          = false
   is_version_controlled                = false
   lifecycle_id                         = "${data.octopusdeploy_lifecycles.lifecycle_default_lifecycle.lifecycles[0].id}"
-  project_group_id                     = "${data.octopusdeploy_project_groups.project_group_project_templates.project_groups[0].id}"
+  project_group_id                     = "${data.octopusdeploy_project_groups.project_group_default_project_group.project_groups[0].id}"
   included_library_variable_sets       = []
   tenanted_deployment_participation    = "${var.project_k8s_helm_template_tenanted}"
 
   connectivity_policy {
-    allow_deployments_to_no_targets = false
+    allow_deployments_to_no_targets = true
     exclude_unhealthy_targets       = false
     skip_machine_behavior           = "None"
+  }
+
+  versioning_strategy {
+    template = "#{Octopus.Version.LastMajor}.#{Octopus.Version.LastMinor}.#{Octopus.Version.NextPatch}"
   }
 
   lifecycle {
