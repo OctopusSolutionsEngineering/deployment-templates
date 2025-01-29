@@ -9,10 +9,10 @@ name: Serialize K8s Helm Template
       - '.octopus/templates/k8s-helm-template/*'
       - 'projects/**/*'
 jobs:
-  envs:
-    PROJECT_DIR: k8s-helm
-    S3_KEY: K8SHelm
   build:
+    env:
+      PROJECT_DIR: k8s-helm
+      S3_KEY: K8SHelm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
