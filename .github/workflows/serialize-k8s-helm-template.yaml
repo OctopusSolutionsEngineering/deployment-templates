@@ -13,6 +13,8 @@ jobs:
     env:
       PROJECT_DIR: k8s-helm
       S3_KEY: K8SHelm
+      PROJECT_NAME: K8s Helm Template
+      PROVIDER_VERSION: 0.40.0
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,12 +40,12 @@ jobs:
               -url ${{ secrets.OCTOPUS_URL }} \
               -space ${{ secrets.OCTOPUS_SPACEID }} \
               -apiKey ${{ secrets.OCTOPUS_APIKEY }} \
-              -projectName "K8s Helm Template" \
+              -projectName "${{ env.PROJECT_NAME }}" \
               -lookupProjectDependencies \
               -ignoreCacManagedValues=false \
               -excludeCaCProjectSettings=true \
               -excludeProvider \
-              -providerVersion "0.40.0" \
+              -providerVersion "${{ env.PROVIDER_VERSION }}" \
               -terraformBackend s3 \
               -dest /tmp/octoexport
         shell: bash
