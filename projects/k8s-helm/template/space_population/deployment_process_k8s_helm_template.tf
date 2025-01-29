@@ -54,10 +54,10 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       can_be_used_for_project_versioning = true
       is_required                        = false
       properties                         = {
-        "Octopus.Action.Helm.ResetValues" = "True"
-        "Octopus.Action.Package.DownloadOnTentacle" = "False"
         "Octopus.Action.RunOnServer" = "false"
         "Octopus.Action.Helm.ClientVersion" = "V3"
+        "Octopus.Action.Helm.ResetValues" = "True"
+        "Octopus.Action.Package.DownloadOnTentacle" = "False"
       }
       environments                       = []
       excluded_environments              = []
