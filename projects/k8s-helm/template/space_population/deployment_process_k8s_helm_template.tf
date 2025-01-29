@@ -17,7 +17,7 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
     action {
       action_type                        = "Octopus.Manual"
       name                               = "Manual Intervention Required"
-      notes                              = "Updated the note"
+      notes                              = "This is updated"
       condition                          = "Success"
       run_on_server                      = false
       is_disabled                        = false
@@ -25,9 +25,9 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       is_required                        = false
       worker_pool_id                     = ""
       properties                         = {
-        "Octopus.Action.RunOnServer" = "false"
         "Octopus.Action.Manual.BlockConcurrentDeployments" = "False"
         "Octopus.Action.Manual.Instructions" = "Proceed?"
+        "Octopus.Action.RunOnServer" = "false"
       }
       environments                       = []
       excluded_environments              = []
@@ -94,10 +94,10 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       is_required                        = false
       worker_pool_id                     = "${data.octopusdeploy_worker_pools.workerpool_hosted_windows.worker_pools[0].id}"
       properties                         = {
+        "Octopus.Action.Script.ScriptBody" = "Write-host \"hello\""
         "Octopus.Action.Script.ScriptSource" = "Inline"
         "Octopus.Action.Script.Syntax" = "PowerShell"
         "Octopus.Action.RunOnServer" = "true"
-        "Octopus.Action.Script.ScriptBody" = "Write-host \"hello\""
       }
       environments                       = []
       excluded_environments              = []
@@ -125,11 +125,11 @@ resource "octopusdeploy_deployment_process" "deployment_process_k8s_helm_templat
       is_required                        = false
       worker_pool_id                     = "${data.octopusdeploy_worker_pools.workerpool_hosted_windows.worker_pools[0].id}"
       properties                         = {
-        "Octopus.Action.Script.ScriptBody" = "echo \"hi\""
         "Octopus.Action.Script.ScriptSource" = "Inline"
         "Octopus.Action.Script.Syntax" = "PowerShell"
         "OctopusUseBundledTooling" = "False"
         "Octopus.Action.RunOnServer" = "true"
+        "Octopus.Action.Script.ScriptBody" = "echo \"this is a test\""
       }
       environments                       = []
       excluded_environments              = []

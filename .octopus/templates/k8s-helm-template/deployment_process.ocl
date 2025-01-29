@@ -3,7 +3,7 @@ step "manual-intervention-required" {
 
     action {
         action_type = "Octopus.Manual"
-        notes = "Updated the note"
+        notes = "This is updated"
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = "Proceed?"
@@ -62,7 +62,7 @@ step "run-a-script" {
     action {
         action_type = "Octopus.Script"
         properties = {
-            Octopus.Action.Script.ScriptBody = "echo \"hi\""
+            Octopus.Action.Script.ScriptBody = "echo \"this is a test\""
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
