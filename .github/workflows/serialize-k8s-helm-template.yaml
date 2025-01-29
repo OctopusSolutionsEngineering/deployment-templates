@@ -9,7 +9,7 @@ name: Serialize K8s Helm Template
       - '.octopus/templates/k8s-helm-template/*'
       - 'projects/**/*'
 jobs:
-  env:
+  envs:
     PROJECT_DIR: k8s-helm
     S3_KEY: K8SHelm
   build:
