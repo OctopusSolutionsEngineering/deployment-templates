@@ -11,6 +11,7 @@ name: Serialize K8s Helm Template
 jobs:
   env:
     PROJECT_DIR: k8s-helm
+    S3_KEY: K8SHelm
   build:
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +73,7 @@ jobs:
             pushd "$dir" || exit
                         
             # Init the terraform backend, passing in the backend config values
-            terraform init -backend-config="bucket=${{ secrets.AWS_BUCKET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=K8sHelm"
+            terraform init -backend-config="bucket=${{ secrets.AWS_BUCKET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=${{ env.S3_KEY }}"
             # Each project is managed in it's own workspace
             terraform workspace select -or-create "${project}"
             
@@ -115,7 +116,7 @@ jobs:
         
             pushd "$dir" || exit
             # Init the terraform backend, passing in the backend config values
-            terraform init -backend-config="bucket=${{ secrets.AWS_BUCKET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=K8sHelm"
+            terraform init -backend-config="bucket=${{ secrets.AWS_BUCKET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -backend-config="key=${{ env.S3_KEY }}"
             # Each project is managed in it's own workspace
             terraform workspace select -or-create "${project}"
         
